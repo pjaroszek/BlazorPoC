@@ -1,5 +1,6 @@
 ﻿@page "/weather"
-@inject HttpClient Http
+@using BlazorPoC.WebUI.Models
+@inject HttpServices Http
 
 <PageTitle>Weather</PageTitle>
 
@@ -39,22 +40,12 @@ else
 }
 
 @code {
-    private WeatherForecast[]? forecasts;
-
+    private List<WeatherForecast>? forecasts = new List<WeatherForecast>();
+    
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+     var results = await Http.GetWeatherForecastData();
+     Console.WriteLine(results);
+     forecasts = results.ToList();
     }
-
-    public class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
-
-        public int TemperatureC { get; set; }
-
-        public string? Summary { get; set; }
-
-        public int TemperatureF => 32 + (int) (TemperatureC / 0.5556);
-    }
-
 }
